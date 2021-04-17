@@ -1,12 +1,13 @@
 import { DateTime } from 'luxon';
 import Table from './Table.js';
+import OPEN_WEATHER_MAP_API_KEY from './credentials.js';
 
 let inputEl = document.getElementById('cityName');
 inputEl.onkeypress = displayWeatherForecast;
 async function getCurrentWeather(event) {
   const OPEN_WEATHER_MAP_API =
     `https://api.openweathermap.org/data/2.5/weather?q=${event.srcElement.value}` +
-    `&appid=***REMOVED***&units=metric&lang=ro`;
+    `&appid=${OPEN_WEATHER_MAP_API_KEY}&units=metric&lang=ro`;
   const response = await fetch(OPEN_WEATHER_MAP_API);
   const data = await response.json();
   return data.coord;
@@ -15,7 +16,7 @@ async function getCurrentWeather(event) {
 async function getWeatherFor8Days({ lat, lon }) {
   const OPEN_WEATHER_MAP_API =
     `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}` +
-    `&appid=***REMOVED***&units=metric&lang=ro`;
+    `&appid=${OPEN_WEATHER_MAP_API_KEY}&units=metric&lang=ro`;
   const response = await fetch(OPEN_WEATHER_MAP_API);
   const data = await response.json();
   return data.daily;
