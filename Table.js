@@ -1,4 +1,4 @@
-class Table {
+export default class Table {
   #columnHeaderTemplate = (content) => `<th>${content}</th>`;
   #rowCellTemplate = (content) => `<td>${content}</td>`;
   #rowTemplate = (content) => `<tr>${content}</tr>`;
