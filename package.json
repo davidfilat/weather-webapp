@@ -12,5 +12,8 @@
   },
   "dependencies": {
     "luxon": "^1.26.0"
-  }
+  },
+  "browserslist": [
+    "last 1 Chrome version"
+  ]
 }

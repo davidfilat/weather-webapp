@@ -1,9 +1,8 @@
 import { DateTime } from 'luxon';
-import { Table } from './Table.js';
+import Table from './Table.js';
 
-let inputEl = document.querySelectorAll('input');
-inputEl.forEach((node) => (node.onchange = getCurrentWeather));
-
+let inputEl = document.getElementById('cityName');
+inputEl.onkeypress = displayWeatherForecast;
 async function getCurrentWeather(event) {
   const OPEN_WEATHER_MAP_API =
     `https://api.openweathermap.org/data/2.5/weather?q=${event.srcElement.value}` +
@@ -27,12 +26,7 @@ function generateForecastTable(dailyData) {
     temperature: ' °C',
     wind_speed: ' m/s',
   };
-  const header = [
-    'Data',
-    'Temperatura Minimă',
-    'Temperatura Maximă',
-    'Viteza vântului',
-  ];
+  const header = ['Data', 'Temp. Minimă', 'Temp. Maximă', 'Viteza vântului'];
   const table = new Table({ header });
   dailyData.forEach((dayData) => {
     const date = DateTime.fromSeconds(dayData.dt)
@@ -53,9 +47,13 @@ function generateForecastTable(dailyData) {
 }
 
 async function displayWeatherForecast(event) {
-  const coords = await getCurrentWeather(event);
-  const dailyData = await getWeatherFor8Days(coords);
-  const table = generateForecastTable(dailyData);
-  const tableEele = document.getElementById('table-container');
-  tableEele.innerHTML = table.toHTMLString();
+  let code = event.keyCode ? event.keyCode : event.which;
+  if (code == 13) {
+    const coords = await getCurrentWeather(event);
+    console.log(coords);
+    const dailyData = await getWeatherFor8Days(coords);
+    const table = generateForecastTable(dailyData);
+    const tableEele = document.getElementById('table-container');
+    tableEele.innerHTML = table.toHTMLString();
+  }
 }
