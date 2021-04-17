@@ -1,14 +1,15 @@
 export default class Table {
-  columnHeaderTemplate = (content) => `<th>${content}</th>`;
-  rowCellTemplate = (content) => `<td>${content}</td>`;
-  rowTemplate = (content) => `<tr>${content}</tr>`;
-  tableContentTemplate = (content) => `<table>${content}</table>`;
   constructor({ header, rows = [] }) {
     this.header = header;
     this.rows = rows;
   }
+
+  columnHeaderTemplate = (content) => `<th>${content}</th>`;
+  rowCellTemplate = (content) => `<td>${content}</td>`;
+  rowTemplate = (content) => `<tr>${content}</tr>`;
+  tableContentTemplate = (content) => `<table>${content}</table>`;
   buildHeader() {
-    let htmlString = '';
+    let htmlString = "";
     this.header.forEach(
       (columnName) => (htmlString += this.columnHeaderTemplate(columnName))
     );
@@ -16,7 +17,7 @@ export default class Table {
   }
 
   buildRow(row) {
-    let rowString = '';
+    let rowString = "";
     row.forEach(
       (cellContent) => (rowString += this.rowCellTemplate(cellContent))
     );
@@ -24,7 +25,7 @@ export default class Table {
   }
 
   buildContentRows() {
-    let htmlString = '';
+    let htmlString = "";
     this.rows.forEach((row) => (htmlString += this.buildRow(row)));
     return htmlString;
   }
