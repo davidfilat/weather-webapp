@@ -30,10 +30,7 @@ function generateForecastTable(dailyData) {
   };
 
   const header = ["Data", "Temp. Minimă", "Temp. Maximă", "Viteza vântului"];
-
-  const table = new Table({ header });
-
-  dailyData.forEach((dayData) => {
+  const rows = dailyData.map((dayData) => {
     const date = DateTime.fromSeconds(dayData.dt)
       .setLocale("ro")
       .toLocaleString(DateTime.DATE_MED);
@@ -45,8 +42,10 @@ function generateForecastTable(dailyData) {
       dayData.wind_speed + units.wind_speed,
     ];
 
-    table.push(row);
+    return row
   });
+
+  const table = new Table({ header, rows });
 
   return table;
 }
@@ -58,7 +57,7 @@ async function displayWeatherForecast(event) {
     const dailyData = await getWeatherFor8Days(coords);
 
     const table = generateForecastTable(dailyData);
-    const tableEele = document.getElementById("table-container");
-    tableEele.innerHTML = table.toHTMLString();
+    const tableEle = document.getElementById("table-container");
+    tableEle.innerHTML = table.toHTMLString();
   }
 }
