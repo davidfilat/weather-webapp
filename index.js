@@ -1,26 +1,26 @@
-import { DateTime } from "luxon";
+import {DateTime} from "luxon";
 import Table from "./Table.js";
-import { OPEN_WEATHER_MAP_API_KEY } from "./credentials.js";
+import {OPEN_WEATHER_MAP_API_KEY} from "./credentials.js";
+
+const OPEN_WEATHER_MAP_API_BASE = "https://api.openweathermap.org/data/2.5"
 
 const inputEl = document.getElementById("cityName");
 inputEl.onkeypress = displayWeatherForecast;
 
-async function getCurrentWeather(event) {
+async function getCurrentWeather(city) {
   const OPEN_WEATHER_MAP_API =
-    `https://api.openweathermap.org/data/2.5/weather?q=${event.srcElement.value}` +
-    `&appid=${OPEN_WEATHER_MAP_API_KEY}&units=metric&lang=ro`;
+    OPEN_WEATHER_MAP_API_BASE + `/weather?q=${city}&appid=${OPEN_WEATHER_MAP_API_KEY}&units=metric&lang=ro`;
   const response = await fetch(OPEN_WEATHER_MAP_API);
-  const data = await response.json();
-  return data.coord;
+  const {coord} = await response.json();
+  return coord;
 }
 
 async function getWeatherFor8Days({ lat, lon }) {
   const OPEN_WEATHER_MAP_API =
-    `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}` +
-    `&appid=${OPEN_WEATHER_MAP_API_KEY}&units=metric&lang=ro`;
+    OPEN_WEATHER_MAP_API_BASE +`/onecall?lat=${lat}&lon=${lon}&appid=${OPEN_WEATHER_MAP_API_KEY}&units=metric&lang=ro`;
   const response = await fetch(OPEN_WEATHER_MAP_API);
-  const data = await response.json();
-  return data.daily;
+  const {daily} = await response.json();
+  return daily;
 }
 
 function generateForecastTable(dailyData) {
@@ -35,27 +35,23 @@ function generateForecastTable(dailyData) {
       .setLocale("ro")
       .toLocaleString(DateTime.DATE_MED);
 
-    const row = [
+    return [
       date,
       dayData.temp.max + units.temperature,
       dayData.temp.min + units.temperature,
       dayData.wind_speed + units.wind_speed,
-    ];
-
-    return row
+    ]
   });
 
-  const table = new Table({ header, rows });
-
-  return table;
+  return new Table({header, rows});
 }
 
 async function displayWeatherForecast(event) {
   const code = event.keyCode ? event.keyCode : event.which;
-  if (code == 13) {
-    const coords = await getCurrentWeather(event);
+  if (code === 13) {
+    const city = event.target.value
+    const coords = await getCurrentWeather(city);
     const dailyData = await getWeatherFor8Days(coords);
-
     const table = generateForecastTable(dailyData);
     const tableEle = document.getElementById("table-container");
     tableEle.innerHTML = table.toHTMLString();
